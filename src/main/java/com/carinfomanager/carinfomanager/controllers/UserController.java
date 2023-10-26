@@ -57,4 +57,27 @@ public class UserController {
             return "userlogin";
         }
     }
+
+    @ModelAttribute("user_car")
+    public Car getUserCar() {
+        return new Car();
+    }
+    @PostMapping("/new_vehicle")
+    public String newVehicle(@ModelAttribute Car request, Model model){
+        System.out.println(request.getMake());
+        System.out.println(request.getMake());
+
+        if (request == null) {
+            model.addAttribute("errorMessage", "Invalid data. Please try again.");
+            return "addVehicleForm"; // Return the form with an error message
+        }
+
+        // Assuming you have a service to save the car to the database
+        carService.saveCar(request);
+
+        // You can also add a success message to the model for display in the view
+        model.addAttribute("message", "Vehicle added successfully");
+
+        return "redirect:/my_records";
+    }
 }
