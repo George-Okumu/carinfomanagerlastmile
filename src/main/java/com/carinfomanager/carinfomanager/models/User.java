@@ -7,6 +7,8 @@ import java.util.Objects;
 
 @Entity // This tells Hibernate to make a table out of this class
 public class User {
+
+
     @Id
     @GeneratedValue(
             strategy = GenerationType.IDENTITY
@@ -14,18 +16,23 @@ public class User {
     private Integer id;
     private String username;
     private String password;
-    private String admin;
+    private String role;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<Car> cars;
 
-    public User(String username, String password, String admin) {
+    public User(){};
+
+    public User(String username, String password, String role) {
         this.username = username;
         this.password = password;
-        this.admin = admin;
+        this.role = role;
     }
 
+    public Integer getId() {
+        return id;
+    }
     public String getUsername() {
         return username;
     }
@@ -42,12 +49,12 @@ public class User {
         this.password = password;
     }
 
-    public String getAdmin() {
-        return admin;
+    public String getRole() {
+        return role;
     }
 
-    public void setAdmin(String admin) {
-        this.admin = admin;
+    public void setRole(String role) {
+        this.role = role;
     }
     public List<Car> getCars() {
         return cars;
@@ -57,11 +64,11 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
-        return Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(admin, user.admin);
+        return Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(role, user.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, password, admin);
+        return Objects.hash(username, password, role);
     }
 }

@@ -17,8 +17,10 @@ public class Car {
     private String make;
     private String model;
     private Integer year;
-    private int userid;
+//    private int userid;
 
+
+    public Car(){};
     public Car(String make, String model, Integer year) {
         this.make = make;
         this.model = model;
