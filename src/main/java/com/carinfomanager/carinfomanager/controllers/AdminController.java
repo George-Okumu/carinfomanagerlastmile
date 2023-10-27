@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -32,7 +34,14 @@ public class AdminController {
     }
     @GetMapping("/adminDashboard")
     public String showAdminDashboard(Model model) {
-        model.addAttribute("listCars", carService.getAllCars());
+        List<Car> cars = carService.getAllCars();
+
+        if (cars.isEmpty()) {
+            model.addAttribute("carRecordsNotFound", true);
+
+        } else {
+            model.addAttribute("listCars", cars);
+        }
         return "adminDashboard";
     }
     @ModelAttribute("user")
@@ -77,7 +86,7 @@ public class AdminController {
         car.setYear(request.getYear());
 
         // Set the "Entered By" property with the User object
-        car.setEnteredBy(user_car);
+        car.setUser(user_car);
         carService.saveCar(car);
 
         model.addAttribute("message", "Vehicle added successfully");

@@ -2,6 +2,7 @@ package com.carinfomanager.carinfomanager.controllers;
 
 import com.carinfomanager.carinfomanager.models.Car;
 import com.carinfomanager.carinfomanager.models.User;
+import com.carinfomanager.carinfomanager.repository.UserRepository;
 import com.carinfomanager.carinfomanager.service.CarService;
 import com.carinfomanager.carinfomanager.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -11,17 +12,21 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class UserController {
     private UserService userService;
     private CarService carService;
+    private UserRepository userRepository;
 
 
-    public UserController(UserService userService, CarService carService) {
+
+    public UserController(UserService userService, CarService carService, UserRepository userRepository) {
         this.userService = userService;
         this.carService = carService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/")
@@ -36,19 +41,19 @@ public class UserController {
 
     @GetMapping("/my_records")
     public String getHomePage(Model model){
-        Optional<Car> carOptional = carService.getCarForSpecificUser(1);
-        if (carOptional.isPresent()) {
-            Car userCar = carOptional.get();
-            model.addAttribute("userCars", Collections.singletonList(userCar));
-        } else {
+        User user = userRepository.findByUsername("data");
+        List<Car> cars = user.getCars();
+        if (cars.isEmpty()) {
             model.addAttribute("carRecordsNotFound", true);
+        } else {
+            System.out.println(cars.get(0).getUser().getRole());
+            model.addAttribute("userCars", cars);
         }
         return "user";
     }
 
     @PostMapping("/login")
     public String processUserLogin(@ModelAttribute User request, Model model) {
-        // Authenticate the admin
         if (userService.isAuthenticated(request.getUsername(), request.getPassword(), false)) {
             return "redirect:/my_records";
         } else {
@@ -69,7 +74,20 @@ public class UserController {
             return "my_record";
         }
 
-        carService.saveCar(request);
+        User user_car = userRepository.findByUsername("data");
+        if (user_car == null) {
+            // Handle the case where the user is not found, later
+        }
+
+        // Create and set the Car object
+        Car car = new Car();
+        car.setMake(request.getMake());
+        car.setModel(request.getModel());
+        car.setYear(request.getYear());
+        // Set the "Entered By" property with the User object
+        car.setUser(user_car);
+        carService.saveCar(car);
+
         model.addAttribute("message", "Vehicle added successfully");
 
         return "redirect:/my_records";
