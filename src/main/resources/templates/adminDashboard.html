@@ -74,12 +74,19 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="vehicle : ${listCars}" class="text-gray-600">
-            <td th:text="${vehicle.make}" class="px-4 py-4"></td>
-            <td th:text="${vehicle.model}" class="px-4 py-4"></td>
-            <td th:text="${vehicle.year}" class="px-4 py-4"></td>
-            <td th:text="${vehicle.enteredBy.role}" class="px-4 py-4"></td>
-        </tr>
+        <th:block th:if="${carRecordsNotFound}">
+            <tr>
+                <td colspan="3" class="px-4 py-4">No vehicles yet</td>
+            </tr>
+        </th:block>
+        <th:block th:unless="${carRecordsNotFound}">
+            <tr th:each="vehicle : ${listCars}" class="text-gray-600">
+                <td th:text="${vehicle.make}" class="px-4 py-4"></td>
+                <td th:text="${vehicle.model}" class="px-4 py-4"></td>
+                <td th:text="${vehicle.year}" class="px-4 py-4"></td>
+                <td th:text="${vehicle.user.username}" class="px-4 py-4"></td>
+            </tr>
+        </th:block>
 
         </tbody>
     </table>

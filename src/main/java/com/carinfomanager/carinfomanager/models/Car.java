@@ -1,11 +1,19 @@
 package com.carinfomanager.carinfomanager.models;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import jdk.jfr.Label;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.Objects;
 
 @Entity
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Car {
+
+
     @Id
     @GeneratedValue(
             strategy = GenerationType.IDENTITY
@@ -15,8 +23,10 @@ public class Car {
     private String model;
     private Integer year;
 
-    @ManyToOne
-    private User enteredBy;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
 
     public Car(){};
     public Car(String make, String model, Integer year) {
@@ -25,6 +35,9 @@ public class Car {
         this.year = year;
     }
 
+    public int getId() {
+        return id;
+    }
     public String getMake() {
         return make;
     }
@@ -49,12 +62,12 @@ public class Car {
         this.year = year;
     }
 
-    public User getEnteredBy() {
-        return enteredBy;
+    public User getUser() {
+        return user;
     }
 
-    public void setEnteredBy(User enteredBy) {
-        this.enteredBy = enteredBy;
+    public void setUser(User user) {
+        this.user = user;
     }
     @Override
     public boolean equals(Object o) {
