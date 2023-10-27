@@ -31,7 +31,7 @@ public class UserController {
 
     @GetMapping("/")
     public  String showUserLoginPage(){
-        return "userlogin";
+        return "user/userlogin";
     }
 
     @ModelAttribute("user")
@@ -46,20 +46,24 @@ public class UserController {
         if (cars.isEmpty()) {
             model.addAttribute("carRecordsNotFound", true);
         } else {
-            System.out.println(cars.get(0).getUser().getRole());
             model.addAttribute("userCars", cars);
         }
-        return "user";
+        return "user/user";
+    }
+
+    @GetMapping("/new_vehicle_record")
+    public String getForm(){
+        return "user/user_new_vehicle";
     }
 
     @PostMapping("/login")
     public String processUserLogin(@ModelAttribute User request, Model model) {
         if (userService.isAuthenticated(request.getUsername(), request.getPassword(), false)) {
-            return "redirect:/my_records";
+            return "redirect:/new_vehicle_record";
         } else {
             // Failed login attempt;
             model.addAttribute("error", "Wrong username or password");
-            return "userlogin";
+            return "user/userlogin";
         }
     }
 

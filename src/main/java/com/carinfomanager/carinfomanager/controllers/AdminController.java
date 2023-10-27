@@ -30,7 +30,7 @@ public class AdminController {
 
     @GetMapping("")
     public String showAdminLogin(Model model) {
-        return "adminlogin";
+        return "admin/adminlogin";
     }
     @GetMapping("/adminDashboard")
     public String showAdminDashboard(Model model) {
@@ -42,11 +42,16 @@ public class AdminController {
         } else {
             model.addAttribute("listCars", cars);
         }
-        return "adminDashboard";
+        return "admin/adminDashboard";
     }
     @ModelAttribute("user")
     public User getUser() {
         return new User();
+    }
+
+    @GetMapping("/new_vehicle")
+    public String getForm(){
+        return "admin/new_vehicle_admin";
     }
 
     @PostMapping("/login")
@@ -54,11 +59,11 @@ public class AdminController {
 
         // Authenticate the admin here (e.g., check credentials)
         if (userService.isAuthenticated(request.getUsername(), request.getPassword(), true)) {
-            return "redirect:/admin/adminDashboard";
+            return "redirect:/admin/new_vehicle";
         } else {
             // Failed login attempt;
             model.addAttribute("error", "Access Denied, kindly contact super admin");
-            return "adminlogin";
+            return "admin/adminlogin";
         }
     }
     @ModelAttribute("car")
@@ -77,7 +82,6 @@ public class AdminController {
         if (user_car == null) {
             // Handle the case where the user is not found, later
         }
-        System.out.println(user_car);
 
         // Create and set the Car object
         Car car = new Car();
