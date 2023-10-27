@@ -1,9 +1,6 @@
 package com.carinfomanager.carinfomanager.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
@@ -17,8 +14,9 @@ public class Car {
     private String make;
     private String model;
     private Integer year;
-//    private int userid;
 
+    @ManyToOne
+    private User enteredBy;
 
     public Car(){};
     public Car(String make, String model, Integer year) {
@@ -51,6 +49,13 @@ public class Car {
         this.year = year;
     }
 
+    public User getEnteredBy() {
+        return enteredBy;
+    }
+
+    public void setEnteredBy(User enteredBy) {
+        this.enteredBy = enteredBy;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

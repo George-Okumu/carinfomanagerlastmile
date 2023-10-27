@@ -2,6 +2,7 @@ package com.carinfomanager.carinfomanager.controllers;
 
 import com.carinfomanager.carinfomanager.models.Car;
 import com.carinfomanager.carinfomanager.models.User;
+import com.carinfomanager.carinfomanager.repository.UserRepository;
 import com.carinfomanager.carinfomanager.service.CarService;
 import com.carinfomanager.carinfomanager.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,13 @@ public class AdminController {
     private final UserService userService;
     private  CarService carService;
 
+    private UserRepository userRepository;
 
-    public AdminController(UserService userService, CarService carService) {
+
+    public AdminController(UserService userService, CarService carService, UserRepository userRepository) {
         this.userService = userService;
         this.carService = carService;
+        this.userRepository = userRepository;
     }
 
 
@@ -55,15 +59,27 @@ public class AdminController {
 
     @PostMapping("/addVehicle")
     public String adminAddNewVehicle(@ModelAttribute Car request, Model model){
-        if (request == null) {
+        if (request.getMake() == null) {
             model.addAttribute("errorMessage", "Invalid data. Please try again.");
-            return "addVehicleForm"; // Return the form with an error message
+            return "my_record";
         }
 
-        // Assuming you have a service to save the car to the database
-        carService.saveCar(request);
+        User user_car = userRepository.findByUsername("admin");
+        if (user_car == null) {
+            // Handle the case where the user is not found, later
+        }
+        System.out.println(user_car);
 
-        // You can also add a success message to the model for display in the view
+        // Create and set the Car object
+        Car car = new Car();
+        car.setMake(request.getMake());
+        car.setModel(request.getModel());
+        car.setYear(request.getYear());
+
+        // Set the "Entered By" property with the User object
+        car.setEnteredBy(user_car);
+        carService.saveCar(car);
+
         model.addAttribute("message", "Vehicle added successfully");
 
         return "redirect:/admin/adminDashboard";
