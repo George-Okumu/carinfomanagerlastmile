@@ -1,6 +1,10 @@
 # Car information manager
 - an application that can store and retrieve car details
 
+## Main Endpoints to visit
+- ```/``` for user login
+- ```/admin``` for admin login
+- ``/vehicles/all`` see all vehicles and their details
 ## Workflow For data entry user
 - A user logs in using the username data and password 1234. 
 - He is presented with a form with 3 input fields : car make , model and year of
