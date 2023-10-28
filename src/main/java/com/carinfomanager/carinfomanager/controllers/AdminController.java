@@ -54,6 +54,11 @@ public class AdminController {
         return "admin/new_vehicle_admin";
     }
 
+    @GetMapping("/logout")
+    public String logout(){
+        return "admin/adminlogin";
+    }
+
     @PostMapping("/login")
     public String processAdminLogin(@ModelAttribute User request, Model model) {
 

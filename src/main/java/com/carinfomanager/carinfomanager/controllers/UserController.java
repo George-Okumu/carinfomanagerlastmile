@@ -56,6 +56,11 @@ public class UserController {
         return "user/user_new_vehicle";
     }
 
+    @GetMapping("/logout")
+    public String logout(){
+        return "user/userlogin";
+    }
+
     @PostMapping("/login")
     public String processUserLogin(@ModelAttribute User request, Model model) {
         if (userService.isAuthenticated(request.getUsername(), request.getPassword(), false)) {
